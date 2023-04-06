@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -18,18 +19,21 @@ import android.widget.Toast;
 
 public class PracticalTest01Var04MainActivity extends AppCompatActivity {
 
-    private class PracticalTest01BroadcastReceiver extends BroadcastReceiver {
-
+    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.d(Constants.BROADCAST_RECEIVER_EXTRA, intent.getStringExtra(Constants.BROADCAST_RECEIVER_EXTRA));
+            Log.d("PracticalTest", intent.getStringExtra("text"));
         }
-    }
+    };
+    private IntentFilter intentFilter = new IntentFilter();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_practical_test01_var04_main);
+
+        intentFilter.addAction(Intent.ACTION_VIEW);
+        intentFilter.addAction(Intent.ACTION_WEB_SEARCH);
 
         if (savedInstanceState != null) {
             ((TextView)findViewById(R.id.editText1)).setText(savedInstanceState.getString("text1"));
@@ -76,8 +80,8 @@ public class PracticalTest01Var04MainActivity extends AppCompatActivity {
                 textView.setVisibility(View.VISIBLE);
 
                 Intent intent = new Intent(getApplicationContext(), PracticalTest01Var04Service.class);
-                intent.putExtra("text1", editText.getText());
-                intent.putExtra("text2", editText2.getText());
+                intent.putExtra("text1", editText.getText().toString());
+                intent.putExtra("text2", editText2.getText().toString());
                 getApplicationContext().startService(intent);
             }
         });
@@ -119,5 +123,16 @@ public class PracticalTest01Var04MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         Toast.makeText(getApplicationContext(), Integer.toString(resultCode), Toast.LENGTH_LONG).show();
+    }
+
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(broadcastReceiver);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        registerReceiver(broadcastReceiver, intentFilter);
     }
 }

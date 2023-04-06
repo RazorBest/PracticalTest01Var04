@@ -3,6 +3,7 @@ package ro.pub.cs.systems.eim.practicaltest01var04;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
+import android.util.Log;
 
 public class PracticalTest01Var04Service extends Service {
     public PracticalTest01Var04Service() {
@@ -14,6 +15,8 @@ public class PracticalTest01Var04Service extends Service {
 
         String text1 = intent.getStringExtra("text1");
         String text2 = intent.getStringExtra("text2");
+
+        Log.d("Test", "Started service");
 
         ProcessThread processingThread = new ProcessThread(this, text1, text2);
         processingThread.start();
