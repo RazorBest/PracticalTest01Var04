@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,6 +17,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class PracticalTest01Var04MainActivity extends AppCompatActivity {
+
+    private class PracticalTest01BroadcastReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d(Constants.BROADCAST_RECEIVER_EXTRA, intent.getStringExtra(Constants.BROADCAST_RECEIVER_EXTRA));
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +74,11 @@ public class PracticalTest01Var04MainActivity extends AppCompatActivity {
                 // Set text view visible
                 textView.setText(text);
                 textView.setVisibility(View.VISIBLE);
+
+                Intent intent = new Intent(getApplicationContext(), PracticalTest01Var04Service.class);
+                intent.putExtra("text1", editText.getText());
+                intent.putExtra("text2", editText2.getText());
+                getApplicationContext().startService(intent);
             }
         });
 
